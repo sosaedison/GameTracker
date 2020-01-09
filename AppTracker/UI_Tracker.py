@@ -45,32 +45,40 @@ class UITracker():
         self.create_acc.grid(row=19, column=1)
 
     def getsettings(self):
-        with open("tracker_config.json", "r") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             return json.load(tracker_config)
 
     def writeconfig(self, data):
-        with open("tracker_config.json","w") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json","w") as tracker_config:
             json.dump(data, tracker_config,indent=4)
 
     def getconfig(self, key):
-        with open("tracker_config.json", "r") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             settings = json.load(tracker_config)
             return settings[key]
+
+    def verifyBay(self, vfid):
+        data = {"userid":vfid}
+        r = requests.post(self.getconfig("verify_url"), json=data)
+        response = json.loads(r.text)
+        print(response)
     
     def handleLoginResponse(self, res, status):
         if( status != 500 ):
             print('Log in success')
             config = self.getsettings()
-            config['company'] = res.company
-            self.writeconfig(config)
+            config['tracked_games'] = res['games']
+            print(config)
+            self.verifyBay(vfid)
+            #self.writeconfig(config)
 
     def login(self, eml, psswd):
         try:
-            dataDict = {
+            data = {
                 "email" : eml,
                 "password": psswd
             }
-            r = requests.post(self.getconfig("login_url"), json=dataDict)
+            r = requests.post(self.getconfig("login_url"), json=data)
             response = json.loads(r.text)
             return self.handleLoginResponse(response, r.status_code)
         except Exception as ex:

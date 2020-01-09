@@ -3,9 +3,10 @@
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
     "name": "sosapc",
-    "company": "",
-    "_id": 0,
-    "login_url":"http://localhost:5000/user/login",
+    "company": "Voxel Virtual Reality Parlour",
+    "_id": "5e173f03ae0d6c2f356827ac",
+    "login_url": "http://localhost:5000/user/login",
+    "verify_url": "http://localhostl:5000/bay/",
     "tracked_games": [
         "Accounting.exe",
         "AltspaceVR.exe",
@@ -26,7 +27,6 @@
         "TiltBrush.exe",
         "Universe Sandbox VR.exe",
         "WaltzOfTheWizard.exe",
-        "FruitNinjaVR.exe",
-        "Spotify.exe"
+        "FruitNinjaVR.exe"
     ]
 }
