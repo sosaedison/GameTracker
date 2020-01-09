@@ -1,0 +1,32 @@
+{
+    "update_tracked_games_url": "http://teamvoxel.pythonanywhere.com/trackablegames",
+    "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
+    "back_up_data": [],
+    "name": "sosapc",
+    "company": "",
+    "_id": 0,
+    "login_url":"http://localhost:5000/user/login",
+    "tracked_games": [
+        "Accounting.exe",
+        "AltspaceVR.exe",
+        "ArizonaSunshine.exe",
+        "BLARP.exe",
+        "BrookhavenGame.exe",
+        "ktane.exe",
+        "LightbladeVR.exe",
+        "VRFunhouse.exe",
+        "OutOfAmmo.exe",
+        "QuiVr.exe",
+        "Recroom_Release",
+        "SpacePirateVR.exe",
+        "SUPERHOTVR.exe",
+        "TheBodyVR.exe",
+        "TheLab.exe",
+        "TheNightCafe.exe",
+        "TiltBrush.exe",
+        "Universe Sandbox VR.exe",
+        "WaltzOfTheWizard.exe",
+        "FruitNinjaVR.exe",
+        "Spotify.exe"
+    ]
+}
