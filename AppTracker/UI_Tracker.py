@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.messagebox import showerror
 import requests, webbrowser, json
 
 class UITracker():
@@ -19,6 +20,7 @@ class UITracker():
         self.bayid = ''
         self.addLoginButton()
         self.addLoginTemplate()
+        self.setbayid()
         
     def addLoginTemplate(self):
         #Creating username lables and entry boxes
@@ -44,7 +46,7 @@ class UITracker():
         self.create_acc = Label(self.app,text="Create Account!", fg="blue", cursor="hand2", background='black', bg='cyan')
         self.create_acc.bind("<Button-1>", lambda e: self.createaccount(""))
         self.create_acc.grid(row=19, column=1)
-
+    
     def setbayid(self):
         settings = self.getsettings()
         self.bayid = settings['bayid']
@@ -61,30 +63,47 @@ class UITracker():
             settings = json.load(tracker_config)
             return settings[key]
 
-    def verifyBay(self, vfid):
-        data = {"userid":vfid}
-        r = requests.post(self.getconfig("verify_url"), json=data)
-        response = json.loads(r.text)
-        print(response)
-    
     def handleLoginResponse(self, res, status):
-        if( status != 500 ):
-            print('Log in success')
-            config = self.getsettings()
-            config['tracked_games'] = res['games']
-            print(config)
-            self.verifyBay(vfid)
-            #self.writeconfig(config)
+        try:
+            if( status != 500 ):
+                print('Log in success')
+                config = self.getsettings()
+                config['tracked_games'] = res['games']
+                config['bayid'] = res['bayid']
+                self.writeconfig(config)
+                print(config)
+                return True
+            print(res.error)
+            return False # Tell user there was a server error on login
+        except Exception as ex:
+            print(ex) # Something went wrong with the config file...
+            return False
+            
 
     def login(self, eml, psswd):
         try:
+            print("failed")
             data = {
                 "email" : eml,
                 "password": psswd
             }
-            r = requests.post(self.getconfig("login_url"), json=data)
-            response = json.loads(r.text)
-            return self.handleLoginResponse(response, r.status_code)
+            if self.bayid:
+                r = requests.post(self.getconfig("login_url"), json=data)
+                response = json.loads(r.text)
+                if self.handleLoginResponse(response, r.status_code):
+                    self.runTracker()
+                else:  
+                    
+                    self.app.withdraw()
+                    showerror(title="Login", message="Incorrect EMAIL or PASSWORD")
+            else:
+                r = requests.post(self.getconfig("addbay_url"), json=data)
+                response = json.loads(r.text)
+                if self.handleLoginResponse(response, r.status_code):
+                    self.runTracker()
+                else:
+                    self.app.withdraw()
+                    showerror(title="Login", message="")
         except Exception as ex:
             print(ex)
             return False
