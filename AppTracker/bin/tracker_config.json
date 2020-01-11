@@ -2,7 +2,7 @@
     "update_tracked_games_url": "http://teamvoxel.pythonanywhere.com/trackablegames",
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
-    "name": "sosapc",
+    "bayid": "",
     "company": "Voxel Virtual Reality Parlour",
     "_id": "5e173f03ae0d6c2f356827ac",
     "login_url": "http://localhost:5000/user/login",

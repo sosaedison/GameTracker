@@ -16,6 +16,7 @@ class UITracker():
         self.passw_entry = ''
         self.login_button = ''
         self.create_acc = ''
+        self.bayid = ''
         self.addLoginButton()
         self.addLoginTemplate()
         
@@ -44,6 +45,9 @@ class UITracker():
         self.create_acc.bind("<Button-1>", lambda e: self.createaccount(""))
         self.create_acc.grid(row=19, column=1)
 
+    def setbayid(self):
+        settings = self.getsettings()
+        self.bayid = settings['bayid']
     def getsettings(self):
         with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             return json.load(tracker_config)
