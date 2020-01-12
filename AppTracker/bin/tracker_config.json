@@ -2,9 +2,7 @@
     "update_tracked_games_url": "http://teamvoxel.pythonanywhere.com/trackablegames",
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
-    "bayid": "5e1945658eeea337c02f5dba",
-    "company": "Voxel Virtual Reality Parlour",
-    "_id": "5e173f03ae0d6c2f356827ac",
+    "bayid": "",
     "login_url": "http://localhost:5000/bay/login",
     "addbay_url": "http://localhost:5000/bay/addbay",
     "tracked_games": []

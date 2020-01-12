@@ -18,9 +18,11 @@ class UITracker():
         self.login_button = ''
         self.create_acc = ''
         self.bayid = ''
+        self.error_text =''
         self.addLoginButton()
         self.addLoginTemplate()
         self.setbayid()
+        self.setErrorText()
         
     def addLoginTemplate(self):
         #Creating username lables and entry boxes
@@ -50,6 +52,14 @@ class UITracker():
     def setbayid(self):
         settings = self.getsettings()
         self.bayid = settings['bayid']
+
+    def setErrorText(self):
+        self.error_text = Label(self.app, text='Error', fg='black', bg='black')
+        self.error_text.grid(row=18, column=1)
+
+    def showErrorText(self, error):
+        self.error_text = Label(self.app, text="error", fg='red', bg='black')
+
     def getsettings(self):
         with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             return json.load(tracker_config)
@@ -73,7 +83,7 @@ class UITracker():
                 self.writeconfig(config)
                 print(config)
                 return True
-            print(res.error)
+            print(res['error'])
             return False # Tell user there was a server error on login
         except Exception as ex:
             print(ex) # Something went wrong with the config file...
@@ -82,28 +92,28 @@ class UITracker():
 
     def login(self, eml, psswd):
         try:
-            print("failed")
             data = {
                 "email" : eml,
                 "password": psswd
             }
+            print("this")
+
             if self.bayid:
                 r = requests.post(self.getconfig("login_url"), json=data)
                 response = json.loads(r.text)
                 if self.handleLoginResponse(response, r.status_code):
                     self.runTracker()
-                else:  
-                    
-                    self.app.withdraw()
-                    showerror(title="Login", message="Incorrect EMAIL or PASSWORD")
             else:
                 r = requests.post(self.getconfig("addbay_url"), json=data)
                 response = json.loads(r.text)
                 if self.handleLoginResponse(response, r.status_code):
-                    self.runTracker()
+                    #self.runTracker()
+                    pass
                 else:
-                    self.app.withdraw()
-                    showerror(title="Login", message="")
+                    self.showErrorText("error")                    
+                    # self.app.withdraw()
+                    # showerror(title="Error",message="Could not add Bay")
+
         except Exception as ex:
             print(ex)
             return False
