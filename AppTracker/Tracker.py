@@ -133,6 +133,7 @@ class Tracker():
                         "time": self.getcurtime(),
                         "game": self.currentgame,
                         "tot_time": total_time,
+                        "userid": self.getconfig("userid"),
                         "bayid": self.getconfig("bayid")
                     }
                     self.updatetrackablegames()

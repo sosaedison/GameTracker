@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.messagebox import showerror
 import requests, webbrowser, json
+from AppTracker.Tracker import Tracker
 
 class UITracker():
 
@@ -18,11 +19,9 @@ class UITracker():
         self.login_button = ''
         self.create_acc = ''
         self.bayid = ''
-        self.error_text =''
         self.addLoginButton()
         self.addLoginTemplate()
         self.setbayid()
-        self.setErrorText()
         
     def addLoginTemplate(self):
         #Creating username lables and entry boxes
@@ -53,13 +52,6 @@ class UITracker():
         settings = self.getsettings()
         self.bayid = settings['bayid']
 
-    def setErrorText(self):
-        self.error_text = Label(self.app, text='Error', fg='black', bg='black')
-        self.error_text.grid(row=18, column=1)
-
-    def showErrorText(self, error):
-        self.error_text = Label(self.app, text="error", fg='red', bg='black')
-
     def getsettings(self):
         with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             return json.load(tracker_config)
@@ -73,22 +65,26 @@ class UITracker():
             settings = json.load(tracker_config)
             return settings[key]
 
-    def handleLoginResponse(self, res, status):
+    def runTracker(self):
+        Tracker.run()
+
+    def handleLoginResponse(self, res, status, addingBay):
         try:
-            if( status != 500 ):
-                print('Log in success')
+            if( status == 201 ):
                 config = self.getsettings()
-                config['tracked_games'] = res['games']
-                config['bayid'] = res['bayid']
+                print(res)
+                config['tracked_games'] = res['tracked_games']
+                if addingBay:
+                    config['bayid'] = res['bayid']
+                    config['userid'] = res['userid']
                 self.writeconfig(config)
-                print(config)
                 return True
-            print(res['error'])
-            return False # Tell user there was a server error on login
+            else:
+                print(res['error'])
+                return False # Tell user there was a server error on login
         except Exception as ex:
             print(ex) # Something went wrong with the config file...
             return False
-            
 
     def login(self, eml, psswd):
         try:
@@ -96,24 +92,21 @@ class UITracker():
                 "email" : eml,
                 "password": psswd
             }
-            print("this")
-
-            if self.bayid:
+            if self.bayid != "":
+                print('login')
                 r = requests.post(self.getconfig("login_url"), json=data)
-                response = json.loads(r.text)
-                if self.handleLoginResponse(response, r.status_code):
+                response = json.loads(r.text) 
+                if self.handleLoginResponse(response, r.status_code, False):
                     self.runTracker()
+                else:
+                    showerror(title='Login Error', message='Wrong Email or Password')
             else:
                 r = requests.post(self.getconfig("addbay_url"), json=data)
                 response = json.loads(r.text)
-                if self.handleLoginResponse(response, r.status_code):
-                    #self.runTracker()
-                    pass
+                if self.handleLoginResponse(response, r.status_code, True):
+                    print('pass add')
                 else:
-                    self.showErrorText("error")                    
-                    # self.app.withdraw()
-                    # showerror(title="Error",message="Could not add Bay")
-
+                    showerror(title='Login Error', message='Wrong Email or Password')
         except Exception as ex:
             print(ex)
             return False

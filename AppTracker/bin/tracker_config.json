@@ -3,7 +3,29 @@
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
     "bayid": "",
+    "user_id": "",
     "login_url": "http://localhost:5000/bay/login",
     "addbay_url": "http://localhost:5000/bay/addbay",
-    "tracked_games": []
+    "tracked_games": [
+        "Accounting.exe",
+        "AltspaceVR.exe",
+        "ArizonaSunshine.exe",
+        "BLARP.exe",
+        "BrookhavenGame.exe",
+        "ktane.exe",
+        "LightbladeVR.exe",
+        "VRFunhouse.exe",
+        "OutOfAmmo.exe",
+        "QuiVr.exe",
+        "Recroom_Release",
+        "SpacePirateVR.exe",
+        "SUPERHOTVR.exe",
+        "TheBodyVR.exe",
+        "TheLab.exe",
+        "TheNightCafe.exe",
+        "TiltBrush.exe",
+        "Universe Sandbox VR.exe",
+        "WaltzOfTheWizard.exe",
+        "FruitNinjaVR.exe"
+    ]
 }
