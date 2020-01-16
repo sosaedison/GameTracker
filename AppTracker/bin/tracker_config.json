@@ -2,8 +2,8 @@
     "update_tracked_games_url": "http://teamvoxel.pythonanywhere.com/trackablegames",
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
-    "bayid": "",
-    "user_id": "",
+    "bayid": "5e1f4c0972e517319100fafc",
+    "userid": "5e1e15044779e52ac02f6c12",
     "login_url": "http://localhost:5000/bay/login",
     "addbay_url": "http://localhost:5000/bay/addbay",
     "tracked_games": [
