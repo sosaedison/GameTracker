@@ -1,4 +1,5 @@
-import tkinter as tk       
+import tkinter as tk      
+import subprocess as process
 from tkinter.messagebox import showerror
 from tkinter import font  as tkfont
 import requests, json, webbrowser
@@ -21,6 +22,7 @@ class SampleApp(tk.Tk):
         self.geometry("+%d+%d" % (x, y))
         self.bayid = ''
         self.setbayid()
+        self.TRACKER_URI = '/Applications/Spotify.app/Contents/MacOS/Spotify'
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -88,6 +90,7 @@ class SampleApp(tk.Tk):
                 response = json.loads(r.text) 
                 if self.handleLoginResponse(response, r.status_code, False):
                     #tracker.run()
+                    process.call(["/Applications/Spotify.app/Contents/MacOS/Spotify"])
                     self.show_frame("TrackerSwitch")
                 else:
                     showerror(title='Login Error', message='Wrong Email or Password')
