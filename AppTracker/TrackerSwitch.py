@@ -1,5 +1,6 @@
 import tkinter as tk
 from Page import Page
+from LoginPage import LoginPage
 
 class TrackerSwitch(Page):
     def __init__(self, *args, **kwargs):

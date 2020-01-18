@@ -1,19 +1,26 @@
 import tkinter as tk
+from tkinter.messagebox import showerror
 from Tracker import Tracker
 from LoginPage import LoginPage
 from MainView import MainView
 from TrackerSwitch import TrackerSwitch
+from Tracker import Tracker
+import json
+            
+def main():
+   
+
+def stillLoggedIn():
+    bayid = getconfig('bayid')
+    if bayid != "":
+        return True
+    return False
+
+def getconfig(key):
+    with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
+        settings = json.load(tracker_config)
+        return settings[key]
+
 
 if __name__ == "__main__":
-    root = tk.Tk() # Use APP.py for tk???
-    main = MainView(root)
-    main.pack(side="top", fill="both", expand=True)
-    root.wm_geometry("400x200")
-    root.resizable(False, False)
-    screen_height = root.winfo_screenheight()
-    screen_width = root.winfo_screenwidth()
-    size = tuple(int(_) for _ in root.geometry().split('+')[0].split('x'))
-    x = screen_width/2 - size[0]/2
-    y = screen_height/2 - size[1]/2
-    root.geometry("+%d+%d" % (x, y))
-    root.mainloop()
+    main()
