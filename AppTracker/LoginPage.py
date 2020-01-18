@@ -7,7 +7,6 @@ import requests, webbrowser, json
 class LoginPage(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        
         login_text = tk.StringVar()
         passd_text = tk.StringVar()
         login_button = tk.Button(self, text='login', width=10, command=lambda: self.login(login_entry.get(), passw_entry.get()), bg='cyan')
@@ -21,7 +20,6 @@ class LoginPage(Page):
         passw_label.grid(row=1, column=0)
         passw_entry.grid(row=1, column=1)
         login_button.grid(row=2, column=1)
-        #create_acc.grid(row=3, column=1)
         self.bayid = ''
         self.setbayid()
 

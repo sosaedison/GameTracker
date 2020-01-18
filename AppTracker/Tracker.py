@@ -5,6 +5,13 @@ class Tracker():
     
     def __init__(self):
         self.currentgame = ""
+        self.abletotrack = False
+
+    def pause(self):
+        self.abletotrack = False
+
+    def istracking(self):
+        return self.abletotrack
 
     def run(self):
         self.track(self.getconfig("tracked_games"))
@@ -35,7 +42,7 @@ class Tracker():
             print(ex)
 
     def getconfig(self, key):
-        with open("tracker_config.json", "r") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             settings = json.load(tracker_config)
             return settings[key]
 
@@ -84,11 +91,11 @@ class Tracker():
             return False
         
     def getsettings(self):
-        with open("tracker_config.json", "r") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             return json.load(tracker_config)
 
     def writeconfig(self, data):
-        with open("tracker_config.json","w") as tracker_config:
+        with open("AppTracker/bin/tracker_config.json","w") as tracker_config:
             json.dump(data, tracker_config,indent=4)
    
     def backupdata(self, data):
@@ -117,26 +124,25 @@ class Tracker():
     def track(self, tracked_games):
         tracking = False
         while True:
-            try:
-                if self.trackedgameisrunning(tracked_games):
-                    tracking = True
-                    start = time.time()
-                    while tracking:
-                        if not self.trackedgameisrunning(tracked_games):
-                            tracking = False
-                    finish = time.time()
-                    total_time = (finish - start)/60
-                    print(total_time)
-                    print(self.currentgame)
-                    data = {
-                        "date": self.getcurdate(),
-                        "time": self.getcurtime(),
-                        "game": self.currentgame,
-                        "tot_time": total_time,
-                        "userid": self.getconfig("userid"),
-                        "bayid": self.getconfig("bayid")
-                    }
-                    self.updatetrackablegames()
-                    self.senddata(data)
-            except Exception as ex:
-                print(ex)
+            while self.abletotrack:
+                try:
+                    if self.trackedgameisrunning(tracked_games):
+                        tracking = True
+                        start = time.time()
+                        while tracking:
+                            if not self.trackedgameisrunning(tracked_games):
+                                tracking = False
+                        finish = time.time()
+                        total_time = (finish - start)/60
+                        data = {
+                            "date": self.getcurdate(),
+                            "time": self.getcurtime(),
+                            "game": self.currentgame,
+                            "tot_time": total_time,
+                            "userid": self.getconfig("userid"),
+                            "bayid": self.getconfig("bayid")
+                        }
+                        self.updatetrackablegames()
+                        self.senddata(data)
+                except Exception as ex:
+                    print(ex)
