@@ -115,8 +115,8 @@ class LoginPage(tk.Frame):
         
         login_text = tk.StringVar()
         passd_text = tk.StringVar()
-        login_label = tk.Label(self, text='Username or Email ->', font=('Helvetica', 14), pady=20, padx=20, background='black', fg='cyan')
-        passw_label = tk.Label(self, text='Password ->', font=('bold', 16), pady=20, padx=20,fg='cyan', background='black')
+        login_label = tk.Label(self, text='Username or Email ->', font=('Helvetica', 14), pady=20, padx=20, background='black', fg='white')
+        passw_label = tk.Label(self, text='Password ->', font=('bold', 16), pady=20, padx=20,fg='white', background='black')
         create_acc = tk.Label(self,text="Create Account!", fg="blue", cursor="hand2", background='black', bg='cyan')
         login_entry = tk.Entry(self, textvariable=login_text, font='Helvetica 15')
         passw_entry = tk.Entry(self, textvariable=passd_text, show='*',font='Helvetica 15')
