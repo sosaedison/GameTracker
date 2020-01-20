@@ -1,18 +1,17 @@
 import tkinter as tk      
-import subprocess as process
+import subprocess, psutil
 from tkinter.messagebox import showerror
 from tkinter import font  as tkfont
 import requests, json, webbrowser
-from Tracker import Tracker
 
-tracker = Tracker()
 class SampleApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.tracking = False
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.switch_font = tkfont.Font(family='Helvetica', size=24, weight="bold", slant="italic")
         self.wm_title("VR Tracker")
-        self.geometry('500x170')
+        self.geometry('400x170')
         self.resizable(False, False)
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -22,8 +21,8 @@ class SampleApp(tk.Tk):
         self.geometry("+%d+%d" % (x, y))
         self.bayid = ''
         self.setbayid()
-        self.TRACKER_URI = '/Applications/Spotify.app/Contents/MacOS/Spotify'
-
+        self.TRACKER_URI = r"C:\Users\CHIEF\AppData\Local\Microsoft\WindowsApps\Spotify.exe"
+        # '/Applications/Spotify.app/Contents/MacOS/Spotify'
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -42,9 +41,19 @@ class SampleApp(tk.Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
-        
-    def sign_out(self):
-        pass
+
+    def startTracker(self):
+        return subprocess.Popen([self.TRACKER_URI])
+
+    def stopTracker(self):
+        try:
+            running_apps = []
+            for process in psutil.process_iter():
+                if process.name() == 'Spotify.exe':
+                    process.terminate()
+            return running_apps
+        except Exception as ex:
+            print(ex)
 
     def setbayid(self):
         settings = self.getsettings()
@@ -89,8 +98,7 @@ class SampleApp(tk.Tk):
                 r = requests.post(self.getconfig("login_url"), json=data)
                 response = json.loads(r.text) 
                 if self.handleLoginResponse(response, r.status_code, False):
-                    #tracker.run()
-                    process.call(["/Applications/Spotify.app/Contents/MacOS/Spotify"])
+                    self.startTracker()
                     self.show_frame("TrackerSwitch")
                 else:
                     showerror(title='Login Error', message='Wrong Email or Password')
@@ -115,8 +123,8 @@ class LoginPage(tk.Frame):
         
         login_text = tk.StringVar()
         passd_text = tk.StringVar()
-        login_label = tk.Label(self, text='Username or Email ->', font=('Helvetica', 14), pady=20, padx=20, background='black', fg='cyan')
-        passw_label = tk.Label(self, text='Password ->', font=('bold', 16), pady=20, padx=20,fg='cyan', background='black')
+        login_label = tk.Label(self, text='Email', font=('Helvetica', 14), pady=20, padx=20, background='black', fg='white')
+        passw_label = tk.Label(self, text='Password', font=('Helvetica', 16), pady=20, padx=20,fg='white', background='black')
         create_acc = tk.Label(self,text="Create Account!", fg="blue", cursor="hand2", background='black', bg='cyan')
         login_entry = tk.Entry(self, textvariable=login_text, font='Helvetica 15')
         passw_entry = tk.Entry(self, textvariable=passd_text, show='*',font='Helvetica 15')
@@ -131,10 +139,41 @@ class TrackerSwitch(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Tracker is running...", font=controller.title_font)
+        self.configure(background='black')
+        self.on = True
+        self.label_text = tk.StringVar(self)
+        self.label_text.set("Tracker is On...")
+        label = tk.Label(self, textvariable=self.label_text, font=controller.switch_font, foreground='cyan', background='black')
         label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="PAUSE", command=lambda: tracker.pause())
+        self.pause_button_text = tk.StringVar(self)
+        self.pause_button_text.set("PAUSE")
+        button = tk.Button(self, textvariable=self.pause_button_text, command=lambda:self.pause() )
         button.pack()
+    
+    def changeRunningStatusText(self):
+        if self.on:
+            self.label_text.set("Tracker is On...")
+        else:
+            self.label_text.set("Tracker is Off")
+
+    def changePauseButtonText(self):
+        if self.on:
+            self.pause_button_text.set("PAUSE")
+        else:
+            self.pause_button_text.set("START")
+    
+    def pause(self):
+        if self.on:
+            self.controller.stopTracker()
+            self.on = False
+            self.changePauseButtonText()
+            self.changeRunningStatusText()
+        else:
+            self.controller.startTracker()
+            self.on = True
+            self.changePauseButtonText()
+            self.changeRunningStatusText()
+           
 
 
 if __name__ == "__main__":

@@ -1,21 +1,22 @@
 import time, psutil, json, requests, datetime
 from requests.models import PreparedRequest
-
+'''
+This class tracks how long the array of executables
+runs in a single session. It then sends the data to
+a specified server (in the config file) as a post
+request.
+'''
 class Tracker():
     
+    # Basic Initializer
     def __init__(self):
         self.currentgame = ""
-        self.abletotrack = False
 
-    def pause(self):
-        self.abletotrack = False
-
-    def istracking(self):
-        return self.abletotrack
-
+    # Runs the Tracker with the executables from the config file
     def run(self):
         self.track(self.getconfig("tracked_games"))
 
+    # Returns the current time
     def getcurtime(self):
         ret = datetime.datetime.now().time()
         hour = ret.hour
@@ -23,6 +24,7 @@ class Tracker():
         seconds = ret.second
         return "{}:{}:{}".format(hour, minutes, seconds)
     
+    # Returns the current date
     def getcurdate(self):
         today = datetime.datetime.today()
         year = today.year
@@ -30,6 +32,7 @@ class Tracker():
         day = today.day
         return "{}-{}-{}".format(year, month, day)
 
+    # Requests the tracked executables from a server url in the config file
     def requesttrackedgames(self):
         try:
             r = requests.get(url = self.getconfig("update_tracked_games_url"))
@@ -37,10 +40,10 @@ class Tracker():
             return obj["tracked_games"]
         except PermissionError as permerr:
             print(permerr)
-            pass
         except Exception as ex:
             print(ex)
 
+    
     def getconfig(self, key):
         with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
             settings = json.load(tracker_config)
@@ -124,25 +127,28 @@ class Tracker():
     def track(self, tracked_games):
         tracking = False
         while True:
-            while self.abletotrack:
-                try:
-                    if self.trackedgameisrunning(tracked_games):
-                        tracking = True
-                        start = time.time()
-                        while tracking:
-                            if not self.trackedgameisrunning(tracked_games):
-                                tracking = False
-                        finish = time.time()
-                        total_time = (finish - start)/60
-                        data = {
-                            "date": self.getcurdate(),
-                            "time": self.getcurtime(),
-                            "game": self.currentgame,
-                            "tot_time": total_time,
-                            "userid": self.getconfig("userid"),
-                            "bayid": self.getconfig("bayid")
-                        }
-                        self.updatetrackablegames()
-                        self.senddata(data)
-                except Exception as ex:
-                    print(ex)
+            try:
+                if self.trackedgameisrunning(tracked_games):
+                    tracking = True
+                    start = time.time()
+                    while tracking:
+                        if not self.trackedgameisrunning(tracked_games):
+                            tracking = False
+                    finish = time.time()
+                    total_time = (finish - start)/60
+                    data = {
+                        "date": self.getcurdate(),
+                        "time": self.getcurtime(),
+                        "game": self.currentgame,
+                        "tot_time": total_time,
+                        "userid": self.getconfig("userid"),
+                        "bayid": self.getconfig("bayid")
+                    }
+                    self.updatetrackablegames()
+                    self.senddata(data)
+            except Exception as ex:
+                print(ex)
+
+if __name__ == "__main__":
+    tracker = Tracker()
+    tracker.run()
