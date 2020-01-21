@@ -45,6 +45,16 @@ class SampleApp(tk.Tk):
     def startTracker(self):
         return subprocess.Popen([self.TRACKER_URI])
 
+    def trackerIsRunning(self):
+        try:
+            running_apps = []
+            for process in psutil.process_iter():
+                if process.name() == 'Spotify.exe':
+                    return True
+            return False
+        except Exception as ex:
+            print(ex)
+
     def stopTracker(self):
         try:
             running_apps = []
@@ -174,7 +184,6 @@ class TrackerSwitch(tk.Frame):
             self.changePauseButtonText()
             self.changeRunningStatusText()
            
-
 
 if __name__ == "__main__":
     app = SampleApp()
