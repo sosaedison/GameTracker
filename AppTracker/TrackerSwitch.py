@@ -1,11 +1,40 @@
 import tkinter as tk
-from Page import Page
-from LoginPage import LoginPage
 
-class TrackerSwitch(Page):
-    def __init__(self, *args, **kwargs):
-        Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="This is TrackerSwitch")
-        label.pack(side="top", fill="both", expand=True)
-        but = tk.Button(self, text="Signout", height=5, width=50)
-        but.pack(side='right')
+class TrackerSwitch(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.configure(background='black')
+        self.on = True
+        self.label_text = tk.StringVar(self)
+        self.label_text.set("Tracker is On...")
+        label = tk.Label(self, textvariable=self.label_text, font=controller.switch_font, foreground='white', background='black')
+        label.pack(side="top", fill="x", pady=10)
+        self.pause_button_text = tk.StringVar(self)
+        self.pause_button_text.set("PAUSE")
+        button = tk.Button(self, textvariable=self.pause_button_text, command=lambda:self.pause() )
+        button.pack()
+    
+    def changeRunningStatusText(self):
+        if self.on:
+            self.label_text.set("Tracker is On...")
+        else:
+            self.label_text.set("Tracker is Off")
+
+    def changePauseButtonText(self):
+        if self.on:
+            self.pause_button_text.set("PAUSE")
+        else:
+            self.pause_button_text.set("START")
+    
+    def pause(self):
+        if self.on:
+            self.controller.stopTracker()
+            self.on = False
+            self.changePauseButtonText()
+            self.changeRunningStatusText()
+        else:
+            self.controller.startTracker()
+            self.on = True
+            self.changePauseButtonText()
+            self.changeRunningStatusText()

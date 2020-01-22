@@ -32,6 +32,16 @@ class Tracker():
         day = today.day
         return "{}-{}-{}".format(year, month, day)
 
+    # return the config file json
+    def getsettings(self):
+        with open("tracker_config.json", "r") as tracker_config:
+            return json.load(tracker_config)
+
+    # Re-write the config json object to the json file.
+    def writeconfig(self, data):
+        with open("tracker_config.json","w") as tracker_config:
+            json.dump(data, tracker_config,indent=4)
+   
     # Requests the tracked executables from a server url in the config file
     def requesttrackedgames(self):
         try:
@@ -43,18 +53,20 @@ class Tracker():
         except Exception as ex:
             print(ex)
 
-    
+    # Return value from the config file given a key
     def getconfig(self, key):
-        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
+        with open("tracker_config.json", "r") as tracker_config:
             settings = json.load(tracker_config)
             return settings[key]
 
+    # Update tracked executables from server
     def updatetrackablegames(self):
         tracked_games = self.requesttrackedgames()
         cursettings = self.getsettings()
         cursettings["tracked_games"] = tracked_games
         self.writeconfig(cursettings)
-        
+    
+    # Return array of the running processes on the machine
     def getrunningapps(self):
         try:
             running_apps = []
@@ -64,6 +76,7 @@ class Tracker():
         except Exception as ex:
             print(ex)
 
+    # Return true if one of the tracked games is running, false otherwise
     def trackedgameisrunning(self, tracked_games): 
         for app in self.getrunningapps():
             for game in tracked_games:
@@ -72,6 +85,7 @@ class Tracker():
                     return True
         return False
 
+    # Send game data to server
     def senddata(self, data):
         try:
             requests.post(self.prepurl(data))
@@ -83,6 +97,7 @@ class Tracker():
             self.backupdata(data)
             return False
     
+    # Send data that was saved offline to the server
     def sendbackup(self, data):
         try:
             requests.post(self.prepurl(data))
@@ -93,19 +108,13 @@ class Tracker():
             print("")
             return False
         
-    def getsettings(self):
-        with open("AppTracker/bin/tracker_config.json", "r") as tracker_config:
-            return json.load(tracker_config)
-
-    def writeconfig(self, data):
-        with open("AppTracker/bin/tracker_config.json","w") as tracker_config:
-            json.dump(data, tracker_config,indent=4)
-   
+    # Push data to array in config file to later be sent to the server
     def backupdata(self, data):
         settings = self.getsettings()
         settings["back_up_data"].append(data)
         self.writeconfig(settings)
             
+    # Send the data that was backed up offline
     def clearbackupdata(self):
         settings = self.getsettings()
         print(settings["back_up_data"])
@@ -119,11 +128,15 @@ class Tracker():
                 print("")
         self.writeconfig(settings)
 
+    # Prepare the url with the data to be sent to the server
     def prepurl(self, data):
         req = PreparedRequest()
         req.prepare_url(self.getconfig("post_data_url"), data)
         return req.url
 
+    # Track play session of any game in the config file.
+    # Then send the data to the server and request an update
+    # in trackable games.
     def track(self, tracked_games):
         tracking = False
         while True:
@@ -149,6 +162,7 @@ class Tracker():
             except Exception as ex:
                 print(ex)
 
+# Run the Tracker
 if __name__ == "__main__":
     tracker = Tracker()
     tracker.run()
