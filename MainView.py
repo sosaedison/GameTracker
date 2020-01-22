@@ -66,8 +66,7 @@ class MainView(tk.Tk):
 
     def stopTracker(self):
         try:
-            exists = self.trackerIsRunning()
-            while exists:
+            while self.trackerIsRunning():
                 for process in psutil.process_iter():
                     if process.name() == 'Tracker.exe':
                         process.terminate()
