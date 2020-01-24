@@ -2,7 +2,7 @@
     "update_tracked_games_url": "http://teamvoxel.pythonanywhere.com/trackablegames",
     "post_data_url": "http://teamvoxel.pythonanywhere.com/update",
     "back_up_data": [],
-    "bayid": "5e2090ba0cac11d2ffcff39a",
+    "bayid": "5e29c87a48c7f73d523c0620",
     "userid": "5e1e15044779e52ac02f6c12",
     "login_url": "http://localhost:5000/bay/login",
     "addbay_url": "http://localhost:5000/bay/addbay",
@@ -26,11 +26,6 @@
         "TiltBrush.exe",
         "Universe Sandbox VR.exe",
         "WaltzOfTheWizard.exe",
-        "FruitNinja.exe",
-        "Spotify.exe",
-        "Beat Saber.exe",
-        "greatc_project_ue4-Win64-shipping.exe",
-        "Elven Assassin.exe",
-        "Spotify.exe"
+        "FruitNinjaVR.exe"
     ]
 }

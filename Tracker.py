@@ -153,8 +153,7 @@ class Tracker():
                         "date": self.getcurdate(),
                         "time": self.getcurtime(),
                         "game": self.currentgame,
-                        "tot_time": total_time,
-                        "userid": self.getconfig("userid"),
+                        "timePlayed": total_time,
                         "bayid": self.getconfig("bayid")
                     }
                     self.updatetrackablegames()
