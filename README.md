@@ -1,21 +1,17 @@
-MIT License
+# Voxel Application Time Tracker 
+The purpose of this repo is to host the code that runs on voxel machines and reports gameplay time to the python-flask backend. 
 
-Copyright (c) [2020] [Sosa Edison-Edebor]
+## Application Structure
+The app is run from `Driver.py`, which imports and runs a Tkinter instance which hold all the UI components for the app UI.
+`Mainview.py` is there the loging view and the view that allows you to switch the tracker off and on live.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+<img width="402" alt="Screen Shot 2021-05-28 at 10 58 42 PM" src="https://user-images.githubusercontent.com/17048396/120057384-4253ed80-c008-11eb-98bb-b2a9e6b5a38e.png">
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Once logged in, the switch view will show and you can turn the tracker off and on via the UI
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Roadmap
+
+I would like to finish making the backend in Node.js/Express for this UI. And then I want to make the backend in Django to further my python skills. 
+
+## Running the application
+- Run `pip install -r requierments.txt` to install all dependencies. and then run `python3 Driver.py` on Mac/Linux to see the UI. The UI is based on a tracker_config.jason file and if the `bayid` field is missing, the UI assumes you're not logged in. 
