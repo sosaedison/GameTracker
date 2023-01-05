@@ -1,4 +1,4 @@
-# Voxel Application Time Tracker 
+# Voxel Application Game Play Time Tracker 
 The purpose of this repo is to host the code that runs on voxel machines and reports gameplay time to the python-flask backend. 
 
 ## Application Structure
